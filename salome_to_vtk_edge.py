@@ -54,35 +54,34 @@ for line in f:
   
   if vertices:
     vertices_data.append(line)
-  if triangle:
-    triangles_data.append(line)
-  if edges:
-    edges_data.append(line)
+#   if triangle:
+#     triangles_data.append(line)
+#   if edges:
+#     edges_data.append(line)
 
   if tuple[0] == "Vertices":
     vertices = True
-    edges = False
+#     edges = False
   if tuple[0] == "Edges":
-    edges = True
-    vertices = False
-  if tuple[0] == "Triangles":
-    triangle = True
-  if tuple[0] == "End":
-    triangle = False
+     vertices = False
+#   if tuple[0] == "Triangles":
+#     triangle = True
+#   if tuple[0] == "End":
+#     triangle = False
 
 f.close()
-
 
 f = open(file_name[:-5]+".dat","w")
 f.write(str(vertices_data[0].strip())+"\n")
 for i in range(1,int(vertices_data[0])+1):
   tuple = vertices_data[i].split()
-  f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
+  f.write(str(round(float(tuple[0])*1e3,6))+" "+\
+      str(round(float(tuple[1])*1e3,6))+" "+str(round(float(tuple[2])*1e3,6))+"\n")
 
-for i in range(1,int(triangles_data[0])+1):
-  tuple = triangles_data[i].split()
-  f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
-f.close()
+# for i in range(1,int(triangles_data[0])+1):
+#   tuple = triangles_data[i].split()
+#   f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
+# f.close()
 
 # f = open(file_name[:-5]+"edges.dat", "w")
 # f.write(str(edges_data[0].strip())+"\n")
@@ -90,7 +89,7 @@ f.close()
 #   tuple = edges_data[i].split()
 #   f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
 
-# f.close()
+f.close()
 
 print "DONE"
 sys.exit(3)

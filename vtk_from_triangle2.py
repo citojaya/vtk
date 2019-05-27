@@ -90,42 +90,42 @@ for i in range(no_of_points):
   counter += 1
   
 counter = 0
-for line in infile:
-  if not line.split():
-    continue
-  tuple = line.split()
-  connect_1.append(int(tuple[0]))
-  connect_2.append(int(tuple[1]))
-  connect_3.append(int(tuple[2]))
+# for line in infile:
+#   if not line.split():
+#     continue
+#   tuple = line.split()
+#   connect_1.append(int(tuple[0]))
+#   connect_2.append(int(tuple[1]))
+#   connect_3.append(int(tuple[2]))
 
 
-  # Build neighbouring node list which is used for surface contact detection 
-  # node[int(tuple[0])].append(int(tuple[1]))
-  # node[int(tuple[0])].append(int(tuple[2]))
-  # node[int(tuple[1])].append(int(tuple[0]))
-  # node[int(tuple[1])].append(int(tuple[2]))
-  # node[int(tuple[2])].append(int(tuple[0]))
-  # node[int(tuple[2])].append(int(tuple[1]))
+#   # Build neighbouring node list which is used for surface contact detection 
+#   # node[int(tuple[0])].append(int(tuple[1]))
+#   # node[int(tuple[0])].append(int(tuple[2]))
+#   # node[int(tuple[1])].append(int(tuple[0]))
+#   # node[int(tuple[1])].append(int(tuple[2]))
+#   # node[int(tuple[2])].append(int(tuple[0]))
+#   # node[int(tuple[2])].append(int(tuple[1]))
 
-  counter += 1
+#   counter += 1
 infile.close()
 
 # Write faces to a file which will be used in the program to find contact surface
-f = open(filename[:-4]+"_surface.dat", "w")
+# f = open(filename[:-4]+"_surface.dat", "w")
 
-# Write number of faces
-f.write(str(counter)+"\n")
-for i in range(counter):
-  ii = connect_1[i]-1
-  jj = connect_2[i]-1
-  kk = connect_3[i]-1
+# # Write number of faces
+# f.write(str(counter)+"\n")
+# for i in range(counter):
+#   ii = connect_1[i]-1
+#   jj = connect_2[i]-1
+#   kk = connect_3[i]-1
   
-  f.write(str(node_x[ii])+" "+str(node_y[ii])+" "+str(node_z[ii])+" "+\
-    str(node_x[jj])+" "+str(node_y[jj])+" "+str(node_z[jj])+" "+\
-      str(node_x[kk])+" "+str(node_y[kk])+" "+str(node_z[kk])+"\n")
-f.close()
+#   f.write(str(node_x[ii])+" "+str(node_y[ii])+" "+str(node_z[ii])+" "+\
+#     str(node_x[jj])+" "+str(node_y[jj])+" "+str(node_z[jj])+" "+\
+#       str(node_x[kk])+" "+str(node_y[kk])+" "+str(node_z[kk])+"\n")
+# f.close()
 
-print("Number of faces "+str(counter))
+# print("Number of faces "+str(counter))
 #write node coordinates and connectivity 
 # f = open(filename[:-4]+"_nodes.dat", "w")
 
@@ -152,39 +152,39 @@ for i in range(0,no_of_points):
 
  
 output.SetPoints(point)
-output.GetPointData().AddArray(nodes_array)
+# output.GetPointData().AddArray(nodes_array)
 #layer = []
 #cell = []
  
-layer_array = vtk.vtkStringArray()
-cell_array = vtk.vtkIntArray()
-cell_array.SetName("cell")
+# layer_array = vtk.vtkStringArray()
+# cell_array = vtk.vtkIntArray()
+# cell_array.SetName("cell")
 
 
-# List of .ele files
+# # List of .ele files
 
-for i in range(counter):
+# for i in range(counter):
 
-  #layer.append(tuple[0])
-  #cell.append(tuple[1])
+#   #layer.append(tuple[0])
+#   #cell.append(tuple[1])
 
-  #layer_array.InsertNextValue((tuple[0]))
-  cell_array.InsertNextValue(i+1)
-  triangle = vtk.vtkTriangle().GetPointIds()
-  triangle.SetId(0, int(connect_1[i])-1)
-  triangle.SetId(1, int(connect_2[i])-1)
-  triangle.SetId(2, int(connect_3[i])-1)
-# Enter 5 for triangle
-  output.InsertNextCell(5, triangle)
+#   #layer_array.InsertNextValue((tuple[0]))
+#   cell_array.InsertNextValue(i+1)
+#   triangle = vtk.vtkTriangle().GetPointIds()
+#   triangle.SetId(0, int(connect_1[i])-1)
+#   triangle.SetId(1, int(connect_2[i])-1)
+#   triangle.SetId(2, int(connect_3[i])-1)
+# # Enter 5 for triangle
+#   output.InsertNextCell(5, triangle)
   
 
-output.GetCellData().AddArray(cell_array)
+# output.GetCellData().AddArray(cell_array)
 
 
-command_used = vtk.vtkStringArray()
-command_used.SetName("provenance")
-command_used.InsertNextValue(" ".join(sys.argv))
-output.GetFieldData().AddArray(command_used)
+# command_used = vtk.vtkStringArray()
+# command_used.SetName("provenance")
+# command_used.InsertNextValue(" ".join(sys.argv))
+# output.GetFieldData().AddArray(command_used)
 
 
 # Write output file

@@ -8,15 +8,14 @@ import library.vtk_tools as vtk_t
 
 from optparse import OptionParser, OptionValueError
 
-def writeVtu(filename, x, y, z, radii, colour): 
+def writeVtu(filename, x, y, z, vx, vy, vz): 
   print(filename)
-  #vtu_file = "par"+str(no_of_files)+".vtu"
   if opts.verbose:print "Writing ",filename
-  tools.snapshot(filename, x, y, z, radii, colour)
-  #tools.snapshot(filename, x, y, z, x_jump, y_jump, z_jump, vx, vy, vz, vx,vy,vz,radii)
-  tools.writePVD("particle.pvd")
+  tools.snapshotVel(filename, x, y, z, vx, vy, vz)
+  tools.writePVD("velocity.pvd")
 
-def readParticle(filename, start, end):
+
+def readVelocityField(filename, start, end):
   count = 0
   linecount = 0
   x = []
@@ -25,15 +24,8 @@ def readParticle(filename, start, end):
   vx = []
   vy = []
   vz = []
-  partCount = 0
-  colour = []
-  radii = []
   timestep = 0.0001
-  cutXMin = 120
-
-  fout = open(filename[:-4]+"_solidvol.dat","w")
-  fout2 = open(filename[:-4]+"_cordNo.dat","w")
-  fout.write("Time Solid volume\n")
+  
   with open(filename) as fin:
     for line in fin:
       count += 1
@@ -41,17 +33,18 @@ def readParticle(filename, start, end):
       if(line.split()[0] == "TIME"):
         if(linecount > int(start)):
           if(remainder == 0):
-            writeVtu("par"+str(linecount)+".vtu", x, y, z,radii, colour)
-            print("Time No of particles ",str(linecount*timestep),partCount)
-            fout.write(str(linecount*timestep)+" "+str(partCount)+"\n")
+            writeVtu("vel"+str(linecount)+".vtu", x,y,z,vx,vy,vz)
+            # print("Time No of particles ",str(linecount*timestep),partCount)
+            # fout.write(str(linecount*timestep)+" "+str(partCount)+"\n")
 
           partCount = 0
           # print(linecount)
           del x[:]
           del y[:]
           del z[:]
-          del colour[:]
-          del radii[:]
+          del vx[:]
+          del vy[:]
+          del vz[:]
 
         linecount += 1
         if(linecount > int(end)):
@@ -60,22 +53,20 @@ def readParticle(filename, start, end):
         xx = float(line.split()[0])
         yy = float(line.split()[1])
         zz = float(line.split()[2])
+        vxx = float(line.split()[3])
+        vyy = float(line.split()[4])
+        vzz = float(line.split()[5])
+
         x.append(round(xx,3))
         y.append(round(yy,3))
         z.append(round(zz,3))
-        vx = float(line.split()[3])
-        vy = float(line.split()[4])
-        vz = float(line.split()[5])
-        cord = line.split()[7]
-        colour.append(round(np.sqrt(vx*vx+vy*vy+vz*vz),3))
-        radii.append(round(float(line.split()[6]),3))
-        if(xx > 100 and xx < 110 and zz < 0):
-          partCount += 1
-        if(xx > cutXMin):
-          fout2.write(cord+"\n")
-        # print(line)
-  fout2.close()
-  fout.close()
+        vx.append(round(vxx,3))
+        vy.append(round(vyy,3))
+        vz.append(round(vzz,3))
+
+ 
+
+
 # so we can find our ../lib no matter how we are called
 findbin = os.path.dirname(os.path.realpath(sys.argv[0]))
 sys.path.append(findbin + '/../lib')
@@ -102,12 +93,4 @@ if len(args) != 4:
 (infile, start, end, skip) = args
 
 tools = vtk_t.VTK_XML_Serial_Unstructured()
-x_jump = []
-y_jump = []
-z_jump = []
-
-x_force = []
-y_force = []
-z_force = []
-
-readParticle(infile, start, end)
+readVelocityField(infile, start, end)
