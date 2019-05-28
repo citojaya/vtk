@@ -28,7 +28,7 @@ def readParticle(filename, start, end):
   partCount = 0
   colour = []
   radii = []
-  timestep = 0.0001
+  timestep = 0.00005
   cutXMin = 120
 
   fout = open(filename[:-4]+"_solidvol.dat","w")
