@@ -28,13 +28,18 @@ if len(args) != 1:
    sys.exit(1)
 (infile) = args[0]
 
+xShift = -80e-3
 fout = open("_initial.inj","w")
 with open(infile) as inf:
   for line in inf:
     tuple = line.split()
     # print(line)
-    if(float(tuple[2]) < -2.5e-3):
-      fout.write(line)
+    if(float(tuple[2]) > -2.5e-3):
+      xNew = tuple[0]
+      xNew = float(xNew[2:])+xShift
+      print(xNew)
+      ln = "(("+str(xNew)+" "+tuple[1]+" "+tuple[2]+" "+tuple[3]+" "+tuple[4]+" "+tuple[5]+" "+tuple[6]+" "+tuple[7]+" "+tuple[8]+"\n"
+      fout.write(ln)
 
 fout.close()
 

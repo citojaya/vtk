@@ -1,5 +1,6 @@
 #!/tools/python/2.6-x86_64/bin/python
 from scipy.stats import f
+from matplotlib import pyplot as plt
 # import pylab
 import numpy as np
 import os
@@ -16,26 +17,52 @@ def writeFile(infile, data):
     fout.write(data[i]+"\n")
   fout.close()
 
+def logNormal():
+  return 0
+
+def plotHistogram(array):
+  print("Sample Standard Deviation ",np.std(array,ddof=1))
+  print("Mean ",np.mean(array))
+
+  size = 40
+  maxVal = max(array)
+  minVal = min(array)
+  binSize = (maxVal-minVal)/size
+
+  print("Bin Size ",binSize)
+  print("Min and Max ",minVal,maxVal)
+
+  binArray = np.array([])
+  for i in range(1,size+1):
+    binArray = np.append(binArray, [binSize*i],axis=0)
+
+  # hist,bins = np.histogram(array,binArray)
+
+  plt.hist(array,binArray)
+  plt.show()
+
 # so we can find our ../lib no matter how we are called
 findbin = os.path.dirname(os.path.realpath(sys.argv[0]))
 sys.path.append(findbin + '/../lib')
 
 
 # parse command line
-p = OptionParser(usage="""usage: %prog [options] <infile>
+p = OptionParser(usage="""usage: %prog [options] <infile> <outfile> <frame>
 
-Reads "particle.dat" file and extract partCollE, wallCollE, noOfPartColl, noOfWallCollE to part_data.dat
-<infile> - particle.dat 
+Reads "particle.dat" file and extract   wallCollE, partCollE,  noOfWallColl, noOfPartColl, velocity to part_data.dat
+<infile> - particle.dat
+<outfile> - output file name
+<frame> - particle snapshot
 
 """)
 p.add_option("-v", action="store_true", dest="verbose",  help="Verbose")
 
 (opts, args) = p.parse_args()
 
-if len(args) != 1:
+if len(args) != 3:
    p.print_help()
    sys.exit(1)
-(infile) = args[0]
+(infile,outfile,frame) = args
 
 blockCount = 0
 count = 0
@@ -43,23 +70,11 @@ data = {}
 
 with open(infile) as fin:
   for line in fin:
-        # break
       if(line.split()[0] == "TIME"):
         count = 0
         blockCount += 1
         print("BLOCK ",blockCount)
-        # if(blockCount == int(block)):
-        #   writeFile("wallColl.dat", noOfWallColl)
-        #   writeFile("partColl.dat", noOfPartColl)
-        #   writeFile("wallCollE.dat", wallCollE)
-        #   writeFile("partCollE.dat", partCollE)
-          
-        #   break
-        # del wallCollE[:]
-        # del partCollE[:]
-        # del noOfPartColl[:]
-        # del noOfWallColl[:]
-        
+       
       else:
         count += 1
         vx = float(line.split()[3])
@@ -67,18 +82,39 @@ with open(infile) as fin:
         vz = float(line.split()[5])
         velMag = np.sqrt(vx*vx+vy*vy+vz*vz)
         data[line.split()[11]] = [line.split()[7],line.split()[8],line.split()[9],line.split()[10],velMag,]
-        
-        # wallCollE.append(line.split()[7])
-        # partCollE.append(line.split()[8])
-        # noOfWallColl.append(line.split()[9])
-        # noOfPartColl.append(line.split()[10])
+      
+      if(int(frame)) == blockCount:
+        break
+
+val = 2
+velArray = np.array([])
+ppCollArray = np.array([])
+pwCollArray = np.array([])
+ppCollEArray = np.array([])
+pwCollEArray = np.array([])
 
 print("SIZE ",len(data))
-fout = open("part_data.dat","w")
+fout = open(outfile+".dat","w")
 for key,value in data.items():
   line = value[0]+" "+value[1]+" "+value[2]+" "+value[3]+" "+str(value[4])
   fout.write(str(key)+" "+line+"\n")
+  velArray = np.append(velArray,[float(value[4])],axis=0)
+  ppCollArray = np.append(ppCollArray,[float(value[3])],axis=0)
+  pwCollArray = np.append(pwCollArray,[float(value[2])],axis=0)
+  ppCollEArray = np.append(ppCollEArray,[float(value[1])],axis=0)
+  pwCollEArray = np.append(pwCollEArray,[float(value[0])],axis=0)
+
 fout.close()
+
+print("written to "+outfile+".dat")
+
+# plotHistogram(ppCollArray)
+# plotHistogram(pwCollArray)
+# plotHistogram(ppCollEArray)
+# plotHistogram(pwCollEArray)
+plotHistogram(velArray)
+
+# plt.plot(velArray,binArray)
 
 print("DONE")
 
