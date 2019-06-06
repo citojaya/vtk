@@ -20,7 +20,7 @@ def writeFile(infile, data):
 def logNormal():
   return 0
 
-def plotHistogram(array):
+def plotHistogram(array, xLable, title):
   print("Sample Standard Deviation ",np.std(array,ddof=1))
   print("Mean ",np.mean(array))
 
@@ -37,7 +37,9 @@ def plotHistogram(array):
     binArray = np.append(binArray, [binSize*i],axis=0)
 
   # hist,bins = np.histogram(array,binArray)
-
+  plt.title(title)
+  plt.ylabel("Frequnecy")
+  plt.xlabel(xLable)
   plt.hist(array,binArray)
   plt.show()
 
@@ -101,18 +103,18 @@ for key,value in data.items():
   velArray = np.append(velArray,[float(value[4])],axis=0)
   ppCollArray = np.append(ppCollArray,[float(value[3])],axis=0)
   pwCollArray = np.append(pwCollArray,[float(value[2])],axis=0)
-  ppCollEArray = np.append(ppCollEArray,[float(value[1])],axis=0)
-  pwCollEArray = np.append(pwCollEArray,[float(value[0])],axis=0)
+  ppCollEArray = np.append(ppCollEArray,[float(value[1])*1e-3],axis=0)
+  pwCollEArray = np.append(pwCollEArray,[float(value[0])*1e-3],axis=0)
 
 fout.close()
 
 print("written to "+outfile+".dat")
 
-# plotHistogram(ppCollArray)
-# plotHistogram(pwCollArray)
-# plotHistogram(ppCollEArray)
+plotHistogram(ppCollArray, "","Particle-Particle Collision Frequnecy")
+plotHistogram(pwCollArray, "","Particle-Wall Collision Frequnecy")
+# plotHistogram(ppCollEArray, "Collision Energy (1e-9 J)", "Particle-Particle Collision Energy Distribution")
 # plotHistogram(pwCollEArray)
-plotHistogram(velArray)
+plotHistogram(velArray, "Velocity (m/s)", "Velocity Distribution")
 
 # plt.plot(velArray,binArray)
 

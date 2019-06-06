@@ -16,7 +16,7 @@ def writeVtu(filename, x, y, z, radii, colour):
   tools.writePVD("particle.pvd")
 
 
-def readParticle(filename, start, end):
+def readParticle(filename, start, end, multiply):
   count = 0
   linecount = 0
   x = []
@@ -57,9 +57,9 @@ def readParticle(filename, start, end):
         if(linecount > int(end)):
           break
       elif (linecount > int(start)):
-        xx = float(line.split()[0])
-        yy = float(line.split()[1])
-        zz = float(line.split()[2])
+        xx = float(line.split()[0])*multiply
+        yy = float(line.split()[1])*multiply
+        zz = float(line.split()[2])*multiply
         x.append(round(xx,3))
         y.append(round(yy,3))
         z.append(round(zz,3))
@@ -68,7 +68,7 @@ def readParticle(filename, start, end):
         vz = float(line.split()[5])
       #  cord = line.split()[7]
         colour.append(round(np.sqrt(vx*vx+vy*vy+vz*vz),3))
-        radii.append(round(float(line.split()[6]),3))
+        radii.append(round(float(line.split()[6])*multiply,3))
         if(xx > 100 and xx < 110 and zz < 0):
           partCount += 1
         #if(xx > cutXMin):
@@ -87,7 +87,7 @@ sys.path.append(findbin + '/../lib')
 
 
 # parse command line
-p = OptionParser(usage="""usage: %prog [options] <infile> <startframe> <endframe> <skip>
+p = OptionParser(usage="""usage: %prog [options] <infile> <startframe> <endframe> <skip> <multiply>
 
 Reads "particle.dat" file and constructs "particle.pvd" which contains particle information 
 for PARAVIEW visualization 
@@ -95,16 +95,17 @@ for PARAVIEW visualization
 <start> - start frame
 <endframe> - end frame
 <skip> - skip this many frames
+<multiply> - multiply output values of x,y,z,dia
 
 """)
 p.add_option("-v", action="store_true", dest="verbose",  help="Verbose")
 
 (opts, args) = p.parse_args()
 # get the com filename
-if len(args) != 4:
+if len(args) != 5:
    p.print_help()
    sys.exit(1)
-(infile, start, end, skip) = args
+(infile, start, end, skip, multiply) = args
 
 tools = vtk_t.VTK_XML_Serial_Unstructured()
 # x_jump = []
@@ -114,5 +115,5 @@ tools = vtk_t.VTK_XML_Serial_Unstructured()
 # x_force = []
 # y_force = []
 # z_force = []
-readParticle(infile, start, end)
+readParticle(infile, start, end, float(multiply))
 
