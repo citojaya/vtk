@@ -34,7 +34,7 @@ def plotHistogram(array, xLable, title):
 
   binArray = np.array([])
   for i in range(1,size+1):
-    binArray = np.append(binArray, [binSize*i],axis=0)
+    binArray = np.append(binArray, [minVal+binSize*i],axis=0)
 
   # hist,bins = np.histogram(array,binArray)
   plt.title(title)

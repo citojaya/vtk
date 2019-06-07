@@ -236,12 +236,19 @@ if len(args) < 3:
 # orderedList()
 
 #These are in mm multiplied by 100
-xmin = 4.5*100
-xmax = 4.75*100
-ymin = -0.17*100
-ymax = 0.17*100
-zmin = -0.2*100
-zmax = 0.2*100
+# xmin = int(10.0*100)
+# xmax = int(10.5*100)
+# ymin = int(0.0*100)
+# ymax = int(0.5*100)
+# zmin = int(2.0*100)
+# zmax = int(2.5*100)
+
+xmin = int(4.020*100)
+xmax = int(4.97*100)
+ymin = int(-0.18*100)
+ymax = int(0.18*100)
+zmin = int(-0.48*100)
+zmax = int(0.0*100)
 #if opts.type == 'b':
 #    (xmin, xmax, ymin, ymax, zmin, zmax, dia, parts) = args
 centerDist = float(dmin)+0.02*float(dmax)

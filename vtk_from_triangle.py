@@ -18,10 +18,11 @@ sys.path.append(findbin + '/../lib')
 
 # parse command line
 # parse command line
-p = OptionParser(usage="""usage: %prog [options] <input.dat>  <out_vtu> 
+p = OptionParser(usage="""usage: %prog [options] <input.dat> <scale>
 
 Generates 3D mesh based on triangular mesh data
 <input.dat> - triangulate mesh data in the following format
+<scale> - multiply the whole geometry by this scale factor
 
 no_of_data_points
 x1 y1 z1
@@ -39,8 +40,8 @@ p.add_option("-a", action="store_true", dest="ascii",  help="ASCII, instead of b
 
 # Get the arguments
 
-if len(args) == 1:
-  (filename) = args[0]
+if len(args) == 2:
+  (filename,scale) = args
 
 else:
    p.print_help()
@@ -82,9 +83,9 @@ for i in range(no_of_points):
 
   nodes_array.InsertNextValue(counter)
   nodes.append(counter)
-  node_x.append(round(float(tuple[0])*1e3,3)) #units in mm
-  node_y.append(round(float(tuple[1])*1e3,3))
-  node_z.append(round(float(tuple[2])*1e3,3))
+  node_x.append(round(float(tuple[0])*1e3*int(scale),3)) #units in mm
+  node_y.append(round(float(tuple[1])*1e3*int(scale),3))
+  node_z.append(round(float(tuple[2])*1e3*int(scale),3))
 
   # node[counter] = [] #neighbour node list
   counter += 1
