@@ -88,14 +88,7 @@ def orderedList():
     f.close()
 
 def distance(px,py,pz,px2,py2,pz2):
-    px = float(px)
-    py = float(py)
-    pz = float(pz)
-    px2 = float(px2)
-    py2 = float(py2)
-    pz2 = float(pz2)
-
-    dist = np.sqrt(np.power((px-px2),2)+np.power((py-py2),2)+np.power((pz-pz2),2))
+    dist = np.sqrt(np.power((float(px)-float(px2)),2)+np.power((float(py)-float(py2)),2)+np.power((float(pz)-float(pz2)),2))
     return dist
 
 def insertable(px,py,pz,dia,particle):
@@ -158,62 +151,78 @@ def randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centDist,dmin,dmax):
 def shift(infile, outfile):
     #zshift = 0.001
     #zshift = 0.002
-    zshift = 0.030
+    zshift = 0.0 #0.030
     #zshift = 0.004
     #zshift = 0.005
     #zshift = 0.006
     
     
-    xshift = 0.0
+    #xshift = 4.e-3 + 0.010e-3 - 0.014296
+    xshift = -0.09
+    xMax = -1.0
+    xMin = 1.0e5
     f1 = open(infile, "r")
     f2 = open(outfile, "w")
     for line in f1:
         tuple = line.split()
         firststr = tuple[0]
         xx = float(firststr[2:]) + xshift
+        xMax = max(xx,xMax)
+        xMin = min(xMin,xx)
         yy = tuple[1]
         zz = float(tuple[2])
         zz += zshift
         zz = str(round(zz,6))
 
-        f2.write(line)
+        # f2.write(line)
         f2.write("(("+str(round(xx,6))+" "+yy+" "+zz+" 0.0 0.0 0.0 "+tuple[6]+" 0.0 1.0))\n")
         #print (xx[2:],yy,str(zz))
 
+
     f1.close()
     f2.close()
+    print("xMin ",xMin)
+    print("xMax ",xMax)
+    
 
-def haircut(infile, outfile, zmax):
+def haircut(infile, outfile, val):
     f1 = open(infile, "r")
     f2 = open(outfile, "w")
+    minVal = 1.0e3
+    maxVal = -1.0e3
     for line in f1:
         tuple = line.split()
         firststr = tuple[0]
         xx = float(firststr[2:])
-        yy = tuple[1]
+        yy = float(tuple[1])
         zz = float(tuple[2])
-
+#        maxVal = max(maxVal,yy)
+#        minVal = min(minVal,yy)
         #f2.write(line)
-        if(xx < zmax):
-            f2.write("(("+str(round(xx,6))+" "+yy+" "+str(round(zz,6))+" 0.0 0.0 0.0 "+tuple[6]+" 0.0 1.0))\n")
+        if(yy > val):
+          maxVal = max(maxVal,yy)
+          minVal = min(minVal,yy)
+          f2.write("(("+str(round(xx,6))+" "+str(round(yy,6))+" "+str(round(zz,6))+" 0.0 0.0 0.0 "+tuple[6]+" 0.0 1.0))\n")
         #print (xx[2:],yy,str(zz))
 
     f1.close()
     f2.close()
+    print("minVal ",minVal)
+    print("maxVal ",maxVal)
 
-def convertToMicro(infile, outfile):
+def convertToMicro(infile, outfile, scale):
     
     f1 = open(infile, "r")
     f2 = open(outfile, "w")
     for line in f1:
         tuple = line.split()
         firstStr = tuple[0]
-        xx = float(firstStr[2:])*0.1
-        yy = float(tuple[1])*0.1
-        zz = float(tuple[2])*0.1
+        xx = float(firstStr[2:])*scale
+        yy = float(tuple[1])*scale
+        zz = float(tuple[2])*scale
         
         #zz = str(round(zz,6))
-        dia = float(tuple[6])*0.1
+        dia = float(tuple[6])*scale
 
         f2.write("(("+str(round(xx,6))+" "+str(round(yy,6))+" "+str(round(zz,6))+" 0.0 0.0 0.0 "+str(round(dia,6))+" 0.0 1.0))\n")
         #print ("(("+str(round(xx,2)),str(round(yy,6)),str(zz),str(dia))
@@ -232,6 +241,7 @@ if len(args) < 3:
    sys.exit(0)
 # tuple = args.split()
 (dmin, dmax,parts) = args
+
 
 # orderedList()
 
@@ -255,12 +265,20 @@ centerDist = float(dmin)+0.02*float(dmax)
 # centerDist = float(14)+0.02*float(14)
   
 
-randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
+#randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #copyInjection("initial.inj", "combined.inj")
-# convertToMicro("initial.inj", "micro.inj")
-#shift("initial.inj", "shift.inj")
-# haircut("haircut.inj","haircut2.inj",0.0005)
-#haircut("haircut.inj","haircut2.inj",0.0997)
 
+##### 20 micron model
+#scale = 1.0/7.0
+#convertToMicro("44000.inj", "44000-20.inj", scale)
+#shift("44000-20.inj", "44000-20-shift.inj")
+#haircut("44000-20-shift.inj","haircut-xmax.inj",(5.0-0.01)*1e-3)
+#haircut("haircut-xmax.inj","haircut-zmin.inj",(-0.5+0.010)*1e-3)
+#haircut("haircut-zmin.inj","haircut-ymax.inj",(0.1-0.010)*1e-3)
+#haircut("haircut-ymax.inj","haircut-final.inj",(-0.1+0.010)*1e-3)
+
+##### 140 micron shift
+# shift("22000-140.inj", "22000-140-shift.inj")
+shift("44000.inj", "44000-140-shift.inj")
 print ("DONE")
 sys.exit(3)
