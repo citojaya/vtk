@@ -71,12 +71,12 @@ for line in f:
 
 f.close()
 
-
+scale = 1.0 #scale factor for coordinates
 f = open(file_name[:-5]+".dat","w")
 f.write(str(vertices_data[0].strip())+"\n")
 for i in range(1,int(vertices_data[0])+1):
   tuple = vertices_data[i].split()
-  f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
+  f.write(str(round(float(tuple[0])*scale))+" "+str(round(float(tuple[1])*scale))+" "+str(round(float(tuple[2])*scale))+"\n")
 
 for i in range(1,int(triangles_data[0])+1):
   tuple = triangles_data[i].split()
