@@ -71,7 +71,7 @@ for line in f:
 
 f.close()
 
-scale = 1.0 #scale factor for coordinates
+scale = 1e3 #scale factor for coordinates
 f = open(file_name[:-5]+".dat","w")
 f.write(str(vertices_data[0].strip())+"\n")
 for i in range(1,int(vertices_data[0])+1):
@@ -83,13 +83,44 @@ for i in range(1,int(triangles_data[0])+1):
   f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
 f.close()
 
-# f = open(file_name[:-5]+"edges.dat", "w")
-# f.write(str(edges_data[0].strip())+"\n")
-# for i in range(1,int(edges_data[0])+1):
-#   tuple = edges_data[i].split()
-#   f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
 
-# f.close()
+
+##############################################################
+
+coords = vertices_data
+connectivity = [[] for x in range(len(vertices_data))]
+  
+# Read cells and connectivity
+for i in range(1,int(triangles_data[0])+1):
+  tuple = triangles_data[i].split()
+  id1 = int(tuple[0])
+  id2 = int(tuple[1])
+  id3 = int(tuple[2])
+  if(id2 not in connectivity[id1]):
+    connectivity[id1].append(id2)
+  if(id3 not in connectivity[id1]):  
+    connectivity[id1].append(id3)
+  
+  if(id1 not in connectivity[id2]):
+    connectivity[id2].append(id1)
+  if(id3 not in connectivity[id2]):
+    connectivity[id2].append(id3)
+  if(id1 not in connectivity[id3]):
+    connectivity[id3].append(id1)
+  if(id2 not in connectivity[id3]):
+    connectivity[id3].append(id2)
+    
+f = open("connectivity.dat","w")
+for i in range(1,int(vertices_data[0])+1):
+  tuple = vertices_data[i].split()
+  f.write(str(round(float(tuple[0])*scale))+" "+\
+    str(round(float(tuple[1])*scale))+" "+\
+    str(round(float(tuple[2])*scale))+" "+str(len(connectivity[i]))+" ")
+  for j in range(len(connectivity[i])):
+    f.write(str(connectivity[i][j])+" ")
+  f.write("\n")
+
+f.close()
 
 print "DONE"
-sys.exit(3)
+

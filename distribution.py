@@ -43,7 +43,8 @@ def plotHistogram(array, xLable, title):
 
   # hist,bins = np.histogram(array,binArray)
   # plt.title("Total "+str(round(total,2))+" mean="+str(round(mean,3))+" sigma="+str(round(sigma,3)))
-  plt.title(" mean="+str(round(mean,3))+" sigma="+str(round(sigma,3)))
+  plt.title(title+': $\mu='+str(round(mean,2))+'$, $\sigma='+str(round(sigma,2))+'$')
+  # plt.title(title+"\n mean="+str(round(mean,3))+" sigma="+str(round(sigma,3)))
   plt.ylabel("Frequnecy")
   plt.xlabel(xLable)
   plt.hist(array,binArray)
@@ -82,11 +83,12 @@ with open(infile) as fin:
   for line in fin:
     count += 1
     dataArray = np.append(dataArray,[float(line.split()[int(col)])],axis=0)
-    if(count == 20000):
-      break
+    # if(count == 20000):
+    #   break
     
 
 # dataArray = np.asarray(data)
+dataArray = 1e-3*dataArray
 print("SIZE ",len(dataArray))
 
 
@@ -98,6 +100,7 @@ print("SIZE ",len(dataArray))
 # plotHistogram(dataArray, "Cell gravity force (*1e6 N)","Cell gravity force")
 # plotHistogram(dataArray, "Particle gravity force Fy (*1e6 N)","Cell gravity force")
 # plotHistogram(dataArray, "Pressure Grad Fx (*1e6 N)", "Pressure Grad")
+plotHistogram(dataArray, "Force (1e3 N/m3)", "Triangular Mesh")
 
 print("DONE")
 
