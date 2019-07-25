@@ -28,7 +28,7 @@ def readParticle(filename, start, end, multiply):
   partCount = 0
   colour = []
   radii = []
-  timestep = 0.00005
+  timestep = 0.00002
   cutXMin = 120
 
   fout = open(filename[:-4]+"_solidvol.dat","w")
@@ -41,7 +41,8 @@ def readParticle(filename, start, end, multiply):
       if(line.split()[0] == "TIME"):
         if(linecount > int(start)):
           if(remainder == 0):
-            writeVtu("par"+str(linecount)+".vtu", x, y, z,radii, colour)
+            # writeVtu("par"+str(linecount)+".vtu", x, y, z,radii, colour)
+            writeVtu(filename[:-4]+str(linecount)+".vtu", x, y, z,radii, colour)
             print("Time No of particles ",str(linecount*timestep),partCount)
             fout.write(str(linecount*timestep)+" "+str(partCount)+"\n")
 

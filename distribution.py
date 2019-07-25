@@ -26,7 +26,7 @@ def plotHistogram(array, xLable, title):
   print("Sample Standard Deviation ",np.std(array,ddof=1))
   print("Mean ",np.mean(array))
 
-  size = 40
+  size = 60
   maxVal = max(array)
   minVal = min(array)
   binSize = (maxVal-minVal)/size
@@ -77,18 +77,20 @@ blockCount = 0
 count = 0
 data = []
 
-dataArray = np.array([])
+data = []
 
 with open(infile) as fin:
   for line in fin:
     count += 1
-    dataArray = np.append(dataArray,[float(line.split()[int(col)])],axis=0)
+    if(line.split()):
+      print(line.split()[int(col)])
+      data.append(float(line.split()[int(col)]))
     # if(count == 20000):
     #   break
     
-
+dataArray = np.array(data)
 # dataArray = np.asarray(data)
-dataArray = 1e-3*dataArray
+# dataArray = 1e-3*dataArray
 print("SIZE ",len(dataArray))
 
 

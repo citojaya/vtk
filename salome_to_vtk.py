@@ -71,22 +71,53 @@ for line in f:
 
 f.close()
 
-scale = 1e3 #scale factor for coordinates
+scale = 1.0 #scale factor for coordinates
 f = open(file_name[:-5]+".dat","w")
 f.write(str(vertices_data[0].strip())+"\n")
 for i in range(1,int(vertices_data[0])+1):
   tuple = vertices_data[i].split()
-  f.write(str(round(float(tuple[0])*scale))+" "+str(round(float(tuple[1])*scale))+" "+str(round(float(tuple[2])*scale))+"\n")
+  f.write(str(round(float(tuple[0])*scale,6))+" "+str(round(float(tuple[1])*scale,6))+" "+str(round(float(tuple[2])*scale,6))+"\n")
 
 for i in range(1,int(triangles_data[0])+1):
   tuple = triangles_data[i].split()
   f.write(tuple[0]+" "+tuple[1]+" "+tuple[2]+"\n")
 f.close()
 
+# Write triangular faces for CFD
 
+f = open("wall-mesh.dat","w")
+f.write(str(int(triangles_data[0]))+"\n")
+#go through triangle surfaces
+for i in range(1,int(triangles_data[0])+1):
+  tuple = triangles_data[i].split()
+  # Get node coordinates
+  tuple = triangles_data[i].split()
+  nd1 = tuple[0]
+  nd2 = tuple[1]
+  nd3 = tuple[2]
+  
+  tuple1 = vertices_data[int(nd1)].split()
+  tuple2 = vertices_data[int(nd2)].split()
+  tuple3 = vertices_data[int(nd3)].split()
 
-##############################################################
+  x1 = str(round(float(tuple1[0]),6))
+  y1 = str(round(float(tuple1[1]),6))
+  z1 = str(round(float(tuple1[2]),6))
 
+  x2 = str(round(float(tuple2[0]),6))
+  y2 = str(round(float(tuple2[1]),6))
+  z2 = str(round(float(tuple2[2]),6))
+
+  x3 = str(round(float(tuple3[0]),6))
+  y3 = str(round(float(tuple3[1]),6))
+  z3 = str(round(float(tuple3[2]),6))
+
+  line = " ".join([x1,y1,z1,x2,y2,z2,x3,y3,z3])
+  f.write(line+"\n")
+
+f.close()
+
+# Write connectivity file for CFD
 coords = vertices_data
 connectivity = [[] for x in range(len(vertices_data))]
   
@@ -110,12 +141,14 @@ for i in range(1,int(triangles_data[0])+1):
   if(id2 not in connectivity[id3]):
     connectivity[id3].append(id2)
     
-f = open("connectivity.dat","w")
+f = open("mesh_connect.dat","w")
+f.write(str(vertices_data[0]))
+f.write(str(triangles_data[0]))
 for i in range(1,int(vertices_data[0])+1):
   tuple = vertices_data[i].split()
-  f.write(str(round(float(tuple[0])*scale))+" "+\
-    str(round(float(tuple[1])*scale))+" "+\
-    str(round(float(tuple[2])*scale))+" "+str(len(connectivity[i]))+" ")
+  f.write(str(round(float(tuple[0])*scale,3))+" "+\
+    str(round(float(tuple[1])*scale,3))+" "+\
+    str(round(float(tuple[2])*scale,3))+" "+str(len(connectivity[i]))+" ")
   for j in range(len(connectivity[i])):
     f.write(str(connectivity[i][j])+" ")
   f.write("\n")

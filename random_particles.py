@@ -253,19 +253,19 @@ if len(args) < 3:
 # zmin = int(2.0*100)
 # zmax = int(2.5*100)
 
-xmin = int(4.020*100)
-xmax = int(4.97*100)
-ymin = int(-0.18*100)
-ymax = int(0.18*100)
-zmin = int(-0.48*100)
-zmax = int(0.0*100)
+xmin = int(-6.0*100)
+xmax = int(6*100)
+ymin = int(1.5*100)
+ymax = int(5.0*100)
+zmin = int(2.0*100)
+zmax = int(4.0*100)
 #if opts.type == 'b':
 #    (xmin, xmax, ymin, ymax, zmin, zmax, dia, parts) = args
 centerDist = float(dmin)+0.02*float(dmax)
 # centerDist = float(14)+0.02*float(14)
   
 
-#randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
+randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #copyInjection("initial.inj", "combined.inj")
 
 ##### 20 micron model
@@ -279,6 +279,6 @@ centerDist = float(dmin)+0.02*float(dmax)
 
 ##### 140 micron shift
 # shift("22000-140.inj", "22000-140-shift.inj")
-shift("44000.inj", "44000-140-shift.inj")
+#shift("44000.inj", "44000-140-shift.inj")
 print ("DONE")
 sys.exit(3)

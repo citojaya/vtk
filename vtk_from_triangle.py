@@ -112,7 +112,7 @@ for line in infile:
 infile.close()
 
 # Write faces to a file which will be used in the program to find contact surface
-f = open(filename[:-4]+"_surface.dat", "w")
+f = open(filename[:-4]+"-mesh.dat", "w")
 
 # Write number of faces
 f.write(str(counter)+"\n")
@@ -121,9 +121,9 @@ for i in range(counter):
   jj = connect_2[i]-1
   kk = connect_3[i]-1
   
-  f.write(str(node_x[ii])+" "+str(node_y[ii])+" "+str(node_z[ii])+" "+\
-    str(node_x[jj])+" "+str(node_y[jj])+" "+str(node_z[jj])+" "+\
-      str(node_x[kk])+" "+str(node_y[kk])+" "+str(node_z[kk])+"\n")
+  f.write(str(node_x[ii]*1e-3)+" "+str(node_y[ii]*1e-3)+" "+str(node_z[ii]*1e-3)+" "+\
+    str(node_x[jj]*1e-3)+" "+str(node_y[jj]*1e-3)+" "+str(node_z[jj]*1e-3)+" "+\
+      str(node_x[kk]*1e-3)+" "+str(node_y[kk]*1e-3)+" "+str(node_z[kk]*1e-3)+"\n")
 f.close()
 
 print("Number of faces "+str(counter))

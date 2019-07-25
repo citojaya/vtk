@@ -35,26 +35,29 @@ p.add_option("-s", action="store", dest="input_dump", type="str", help="read sam
 
 (opts, args) = p.parse_args()
 # get the com filename
-if len(args) != 2:
+if len(args) != 3:
    p.print_help()
    sys.exit(1)
-(start, end) = args
+(path, start, end) = args
 
 fileNames = []
 
 #tools = vtk_t.VTK_XML_Serial_Unstructured()
 
 for no_of_files in range(int(start),int(end)):
-  file_name = "out_0disk"+str(no_of_files)+".dat"
-  os.system("read_binary_drum.py "+file_name+" "+"ascii_"+file_name)
+  file_name = path+str(no_of_files)+".dat"
+  # os.system("read_binary_drum.py "+file_name+" "+"ascii_"+file_name)
   
   f_name = file_name[0:len(file_name)-4]
-  os.system("vtk_from_triangle.py "+"ascii_"+file_name+" "+f_name+".vtu")
+  print(f_name)
+  # os.system("python vtk_from_triangle.py "+"capsule"+" "+f_name+".vtu")
+  os.system("python vtk_from_triangle.py "+f_name+".dat"+" 1")
   
   fileNames.append(f_name+".vtu")
 
 #fileNames = glob.glob("out_0disk*.vtu")
 
+# exit(0)
 #outFile = open("drum.pvd", 'w')
 
 import xml.dom.minidom
@@ -83,5 +86,5 @@ outFile.close()
 
 
 
-print "DONE" 
+print ("DONE") 
 
