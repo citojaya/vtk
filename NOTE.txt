@@ -21,6 +21,18 @@ salome_to_vtk.py <surface.mesh>
 and write faces on to a file (*_surfaces.dat) which is used in the simulation to calculate contact force with wall
 vtk_from_triangle.py <surface.dat>
 
+################################################################
 # Collision frequency and collision energy probability distribution
 python collision.py <particle.dat> <outfile.dat> <frame>
 Read from particle.dat and plot collision frequency, collision energy, velocity
+
+
+################################################################
+DPI animation
+
+#Rotate capsule and generate snapshots
+python rotate_cap.py ../../Documents/dpi-test4/capsule-wall.dat <angVel> <endframe>
+
+#Build PVD file for capsule animation
+python run_drum.py ../../Documents/dpi-test4/capsule <startframe> <endframe>
+
