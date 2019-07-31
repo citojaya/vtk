@@ -50,8 +50,7 @@ for no_of_files in range(int(start),int(end)):
   
   f_name = file_name[0:len(file_name)-4]
   print(f_name)
-  # os.system("python vtk_from_triangle.py "+"capsule"+" "+f_name+".vtu")
-  os.system("python vtk_from_triangle.py "+f_name+".dat"+" 1")
+  # os.system("python vtk_from_triangle.py "+f_name+".dat"+" 1")
   
   fileNames.append(f_name+".vtu")
 

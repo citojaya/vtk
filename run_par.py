@@ -41,8 +41,10 @@ def readParticle(filename, start, end, multiply):
       if(line.split()[0] == "TIME"):
         if(linecount > int(start)):
           if(remainder == 0):
-            # writeVtu("par"+str(linecount)+".vtu", x, y, z,radii, colour)
-            writeVtu(filename[:-4]+str(linecount)+".vtu", x, y, z,radii, colour)
+            # print(filename[:-12]+"vtu/particle"+str(linecount)+".vtu")
+            ##writeVtu("par"+str(linecount)+".vtu", x, y, z,radii, colour)
+            # writeVtu(filename[:-4]+str(linecount)+".vtu", x, y, z,radii, colour)
+            writeVtu(filename[:-12]+"vtu/particle"+str(linecount)+".vtu", x, y, z,radii, colour)
             print("Time No of particles ",str(linecount*timestep),partCount)
             fout.write(str(linecount*timestep)+" "+str(partCount)+"\n")
 

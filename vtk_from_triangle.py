@@ -35,6 +35,7 @@ p1 p2 p3
 """)
 p.add_option("-v", action="store_true", dest="verbose",  help="Verbose")
 p.add_option("-a", action="store_true", dest="ascii",  help="ASCII, instead of binary, .vtu output")
+p.add_option("-m", action="store_true", dest="mesh",  help="Generate wall mesh file for contact detection")
 (opts, args) = p.parse_args()
 
 
@@ -112,19 +113,21 @@ for line in infile:
 infile.close()
 
 # Write faces to a file which will be used in the program to find contact surface
-f = open(filename[:-4]+"-mesh.dat", "w")
 
-# Write number of faces
-f.write(str(counter)+"\n")
-for i in range(counter):
-  ii = connect_1[i]-1
-  jj = connect_2[i]-1
-  kk = connect_3[i]-1
-  
-  f.write(str(node_x[ii]*1e-3)+" "+str(node_y[ii]*1e-3)+" "+str(node_z[ii]*1e-3)+" "+\
-    str(node_x[jj]*1e-3)+" "+str(node_y[jj]*1e-3)+" "+str(node_z[jj]*1e-3)+" "+\
-      str(node_x[kk]*1e-3)+" "+str(node_y[kk]*1e-3)+" "+str(node_z[kk]*1e-3)+"\n")
-f.close()
+if opts.mesh:
+  f = open(filename[:-4]+"-mesh.dat", "w")
+
+  # Write number of faces
+  f.write(str(counter)+"\n")
+  for i in range(counter):
+    ii = connect_1[i]-1
+    jj = connect_2[i]-1
+    kk = connect_3[i]-1
+    
+    f.write(str(node_x[ii]*1e-3)+" "+str(node_y[ii]*1e-3)+" "+str(node_z[ii]*1e-3)+" "+\
+      str(node_x[jj]*1e-3)+" "+str(node_y[jj]*1e-3)+" "+str(node_z[jj]*1e-3)+" "+\
+        str(node_x[kk]*1e-3)+" "+str(node_y[kk]*1e-3)+" "+str(node_z[kk]*1e-3)+"\n")
+  f.close()
 
 print("Number of faces "+str(counter))
 #write node coordinates and connectivity 

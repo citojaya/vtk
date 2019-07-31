@@ -36,11 +36,14 @@ with open(infile) as inf:
     # print(line)
     # if(float(tuple[2]) > -2.5e-3):
     xNew = tuple[0]
-    xNew = float(xNew[2:])+xShift
-    #   if(xNew > 6.0e-3 and xNew < 9.0e-3):
-        # print(xNew)
-    ln = "(("+str(xNew)+" "+tuple[1]+" "+tuple[2]+" "+tuple[3]+" "+tuple[4]+" "+tuple[5]+" "+tuple[6]+" "+tuple[7]+" "+tuple[8]+"\n"
-    fout.write(ln)
+    xNew = float(xNew[2:])
+    yNew = float(tuple[1])
+    zNew = float(tuple[2])
+    if(zNew < -1.6e-3 or zNew > 1.6e-3):
+        if(yNew > 2.3e-3):
+    # and yNew > 4.8e-3 and zNew < -1.6e-3 and zNew < -1.6e-3 and zNew > 1.6e-3):
+            ln = "(("+str(xNew)+" "+str(yNew)+" "+str(zNew)+" "+tuple[3]+" "+tuple[4]+" "+tuple[5]+" "+tuple[6]+" "+tuple[7]+" "+tuple[8]+"\n"
+            fout.write(ln)
 
 fout.close()
 
