@@ -117,48 +117,61 @@ def randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centDist,dmin,dmax):
 
     if opts.verbose:print ("Writing to injection file initial.inj")
     f = open("initial.inj","w")
-
+    fp = open("particle.dat","w")
+    fp.write("TIME = 0.0\n")
     while(noOfParts < int(parts)):
         px = random.randint(xmin,xmax)*0.01
         py = random.randint(ymin,ymax)*0.01
         pz = random.randint(zmin,zmax)*0.01
         randSize = random.randint(int(dmin), int(dmax))*0.01
         # if(insertable(px,py,pz,dia,particle)):
-        if(insertable(px,py,pz,randSize,particle)):
-            sx = str(round((px)*1e-3,6))
-            sy = str(round((py)*1e-3,6))
-            sz = str(round((pz)*1e-3,6))
-            # size = str(round(float(dia)*1e-3,6))
-            size = str(round(float(randSize)*1e-3,6))
-            xMin = min(xMin,px)
-            yMin = min(yMin,py)
-            zMin = min(zMin,pz)
-            xMax = max(xMax,px)
-            yMax = max(yMax,py)
-            zMax = max(zMax,pz)
+        center = np.array([0,0,pz])
+        p = np.array([px,py,pz])
+        # r = np.sqrt(px*px+pz*pz)
+        r = np.linalg.norm(p - center)
+        if(r > 7.8 and r < 8.4):
+           if(insertable(px,py,pz,randSize,particle)):
+                px1 = str(round(px,6))
+                py1 = str(round(py,6))
+                pz1 = str(round(pz,6))
+                pd = str(round(float(randSize),6))
+                sx = str(round((px)*1e-3,6))
+                sy = str(round((py)*1e-3,6))
+                sz = str(round((pz)*1e-3,6))
+                # size = str(round(float(dia)*1e-3,6))
+                size = str(round(float(randSize)*1e-3,6))
+                xMin = min(xMin,px)
+                yMin = min(yMin,py)
+                zMin = min(zMin,pz)
+                xMax = max(xMax,px)
+                yMax = max(yMax,py)
+                zMax = max(zMax,pz)
 
-            f.write("(("+sx+" "+sy+" "+sz+" 0.0 0.0 0.0 "+size+" 0.0 1.0))\n")
-            particle.append((px,py,pz))
-            noOfParts += 1
-            if(noOfParts%100 == 0):
-                print("No of particles",noOfParts)
+                f.write("(("+sx+" "+sy+" "+sz+" 0.0 0.0 0.0 "+size+" 0.0 1.0))\n")
+                line = " ".join([px1,py1,pz1,"0 0 0",pd,"0 0 0 0 0",str(noOfParts)])
+                fp.write(line+"\n")
+                particle.append((px,py,pz))
+                noOfParts += 1
+                if(noOfParts%100 == 0):
+                    print("No of particles",noOfParts)
 
     # print("No of particles",noOfParts)
     print("Min Max",xMin,xMax,yMin,yMax,zMin,zMax)
+    fp.close()
     f.close()
     # print(particle)
 
 def shift(infile, outfile):
-    #zshift = 0.001
-    #zshift = 0.002
-    zshift = 0.0 #0.030
+    
+    zshift = 0.0
+    # zshift = 0.0 #0.030
     #zshift = 0.004
     #zshift = 0.005
     #zshift = 0.006
     
     
     #xshift = 4.e-3 + 0.010e-3 - 0.014296
-    xshift = -0.09
+    xshift = -0.095
     xMax = -1.0
     xMin = 1.0e5
     f1 = open(infile, "r")
@@ -253,12 +266,12 @@ if len(args) < 3:
 # zmin = int(2.0*100)
 # zmax = int(2.5*100)
 
-xmin = int(-6.0*100)
-xmax = int(6*100)
-ymin = int(1.5*100)
-ymax = int(5.0*100)
-zmin = int(2.0*100)
-zmax = int(4.0*100)
+xmin = int(-12.6*100)
+xmax = int(12.6*100)
+ymin = int(-12.2*100)
+ymax = int(12.2*100)
+zmin = int(-4.0*100)
+zmax = int(-0.5*100)
 #if opts.type == 'b':
 #    (xmin, xmax, ymin, ymax, zmin, zmax, dia, parts) = args
 centerDist = float(dmin)+0.02*float(dmax)
@@ -278,7 +291,7 @@ randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #haircut("haircut-ymax.inj","haircut-final.inj",(-0.1+0.010)*1e-3)
 
 ##### 140 micron shift
-# shift("22000-140.inj", "22000-140-shift.inj")
+# shift("22000.inj", "22000-shift.inj")
 #shift("44000.inj", "44000-140-shift.inj")
 print ("DONE")
 sys.exit(3)

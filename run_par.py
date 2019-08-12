@@ -38,6 +38,7 @@ def readParticle(filename, start, end, multiply):
     for line in fin:
       count += 1
       remainder = linecount%int(skip)
+      line.strip()
       if(line.split()[0] == "TIME"):
         if(linecount > int(start)):
           if(remainder == 0):

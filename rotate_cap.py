@@ -72,9 +72,9 @@ for n in range (int(steps)):
         yy = float(tuple[1]) + yShift
         zz = float(tuple[2]) + zShift
         
-        newX = xx*np.cos(omega*(n+1))-zz*np.sin(omega*(n+1))
+        newX = xx*np.cos(-omega*(n))-zz*np.sin(-omega*(n))
         newY = yy 
-        newZ = xx*np.sin(omega*(n+1))+zz*np.cos(omega*(n+1)) 
+        newZ = xx*np.sin(-omega*(n))+zz*np.cos(-omega*(n)) 
         
         newLine = " ".join([str(round(newX,6)),str(round(newY,6)),str(round(newZ,6))])
         f.write(newLine+"\n")

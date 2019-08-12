@@ -19,6 +19,7 @@ sys.path.append(findbin + '/../lib')
 # parse command line:
 p = OptionParser(usage="""Program <start> <end>
 
+<path> - filename including pasth (../../Documents/dpi-test/capsule.dat)
 <start> - starting file
 <end> - finishing file
 
@@ -46,11 +47,11 @@ fileNames = []
 
 for no_of_files in range(int(start),int(end)):
   file_name = path+str(no_of_files)+".dat"
-  # os.system("read_binary_drum.py "+file_name+" "+"ascii_"+file_name)
+  # #os.system("read_binary_drum.py "+file_name+" "+"ascii_"+file_name)
   
   f_name = file_name[0:len(file_name)-4]
   print(f_name)
-  # os.system("python vtk_from_triangle.py "+f_name+".dat"+" 1")
+  os.system("python vtk_from_triangle.py "+f_name+".dat"+" 1")
   
   fileNames.append(f_name+".vtu")
 
