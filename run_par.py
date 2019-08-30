@@ -60,20 +60,24 @@ def readParticle(filename, start, end, multiply):
         linecount += 1
         if(linecount > int(end)):
           break
-      elif (linecount > int(start)):
+      elif (linecount > int(start) and len(line) > 1):
         xx = float(line.split()[0])*multiply
         yy = float(line.split()[1])*multiply
         zz = float(line.split()[2])*multiply
-        x.append(round(xx,3))
-        y.append(round(yy,3))
-        z.append(round(zz,3))
         vx = float(line.split()[3])
         vy = float(line.split()[4])
         vz = float(line.split()[5])
-      #  cord = line.split()[7]
-        colour.append(round(np.sqrt(vx*vx+vy*vy+vz*vz),3))
-        radii.append(round(float(line.split()[6])*multiply,3))
-        if(xx > 100 and xx < 110 and zz < 0):
+        r = np.sqrt(xx*xx+yy*yy)
+        vel = np.sqrt(vx*vx+vy*vy+vz*vz)
+        if(r < 1900.55 and vel < 1400.):
+          x.append(round(xx,3))
+          y.append(round(yy,3))
+          z.append(round(zz,3))
+
+        #  cord = line.split()[7]
+          colour.append(round(np.sqrt(vx*vx+vy*vy+vz*vz),3))
+          radii.append(round(float(line.split()[6])*multiply,3))
+        if(zz > 9.5):
           partCount += 1
         #if(xx > cutXMin):
         #  fout2.write(cord+"\n")

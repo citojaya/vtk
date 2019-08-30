@@ -20,7 +20,6 @@ sys.path.append(findbin + '/../lib')
 p = OptionParser(usage="""Program <start> <end>
 
 <path> - filename including pasth (../../Documents/dpi-test/capsule.dat)
-<outfile> - Name of PVD outfile 
 <start> - starting file
 <end> - finishing file
 
@@ -37,10 +36,10 @@ p.add_option("-s", action="store", dest="input_dump", type="str", help="read sam
 
 (opts, args) = p.parse_args()
 # get the com filename
-if len(args) != 4:
+if len(args) != 3:
    p.print_help()
    sys.exit(1)
-(path, outfile, start, end) = args
+(path, start, end) = args
 
 fileNames = []
 
@@ -81,7 +80,7 @@ for i in range(len(fileNames)):
   dataSet.setAttribute("file", str(fileNames[i]))
   collection.appendChild(dataSet)
 
-outFile = open(outfile, 'w')
+outFile = open("drum.pvd", 'w')
 pvd.writexml(outFile, newl='\n')
 outFile.close()
 

@@ -129,7 +129,9 @@ def randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centDist,dmin,dmax):
         p = np.array([px,py,pz])
         # r = np.sqrt(px*px+pz*pz)
         r = np.linalg.norm(p - center)
-        if(r > 7.8 and r < 8.4):
+        # if(r > 7.8 and r < 8.4): #for aerolizer
+        # if(r > 10 and r < 12): # for inhaler
+        if(r > 0 and r < 200): # for capsule test
            if(insertable(px,py,pz,randSize,particle)):
                 px1 = str(round(px,6))
                 py1 = str(round(py,6))
@@ -147,7 +149,17 @@ def randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centDist,dmin,dmax):
                 yMax = max(yMax,py)
                 zMax = max(zMax,pz)
 
-                f.write("(("+sx+" "+sy+" "+sz+" 0.0 0.0 0.0 "+size+" 0.0 1.0))\n")
+                # Initial velocity
+                poVec = center - np.array([px*1e-3,py*1e-3,pz*1e-3])
+                tVec = np.cross(poVec,zuVec)
+                # unit tangent vector
+                tVec = tVec/np.linalg.norm(tVec)
+                # tangential velocity
+                tVel = capR*omega*tVec
+                velX = str(round(tVel[0],6))
+                velY = str(round(tVel[1],6))
+                velZ = str(round(tVel[2],6))
+                f.write("(("+sx+" "+sy+" "+sz+" "+velX+" "+velY+" "+velZ+" "+size+" 0.0 1.0))\n")
                 line = " ".join([px1,py1,pz1,"0 0 0",pd,"0 0 0 0 0",str(noOfParts)])
                 fp.write(line+"\n")
                 particle.append((px,py,pz))
@@ -162,14 +174,12 @@ def randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centDist,dmin,dmax):
     # print(particle)
 
 def shift(infile, outfile):
-    
     zshift = 0.0
     # zshift = 0.0 #0.030
     #zshift = 0.004
     #zshift = 0.005
     #zshift = 0.006
-    
-    
+  
     #xshift = 4.e-3 + 0.010e-3 - 0.014296
     xshift = -0.095
     xMax = -1.0
@@ -223,6 +233,40 @@ def haircut(infile, outfile, val):
     print("minVal ",minVal)
     print("maxVal ",maxVal)
 
+def filterData(infile, outfile):
+    f1 = open(infile, "r")
+    f2 = open(outfile, "w")
+    r = 9.6e-3
+    noOfParts = 0
+    fp = open("particle.dat","w")
+    fp.write("TIME = 0.0\n")    
+    for line in f1:
+        tuple = line.split()
+        firststr = tuple[0]
+        xx = float(firststr[2:])
+        yy = float(tuple[1])
+        zz = float(tuple[2])
+
+        px = str(xx*1.e3)
+        py = str(yy*1.e3)
+        pz = str(zz*1.e3)
+        pd = str(float(tuple[6])*1.e3)
+#        maxVal = max(maxVal,yy)
+#        minVal = min(minVal,yy)
+        #f2.write(line)
+        if(np.sqrt(xx*xx+yy*yy) < r):
+          line = " ".join(["(("+str(round(xx,6)),str(round(yy,6)),str(round(zz,6))\
+              ,tuple[3],tuple[4],tuple[5],tuple[6]," 0.0 1.0))\n"])
+          line2 = " ".join([px,py,pz,"0 0 0",pd,"0 0 0 0 0",str(noOfParts)])
+          fp.write(line2+"\n")
+          f2.write(line)
+          noOfParts += 1
+        #print (xx[2:],yy,str(zz))
+
+    f1.close()
+    f2.close()
+    fp.close()
+
 def convertToMicro(infile, outfile, scale):
     
     f1 = open(infile, "r")
@@ -266,6 +310,13 @@ if len(args) < 3:
 # zmin = int(2.0*100)
 # zmax = int(2.5*100)
 
+# particle ring for aerolizer
+capR = 8.*1e-3
+omega = 94.
+center = np.array([0,0,-2.95]) #capsule center for aeroliser
+# center = np.array([14.8,15.73,9.5]) #capsule center for aeroliser
+# zuVec = np.array([0,0,1.]) #unit vector in z direction
+zuVec = np.array([0,1,0.]) #unit vector in y direction
 xmin = int(-12.6*100)
 xmax = int(12.6*100)
 ymin = int(-12.2*100)
@@ -276,19 +327,60 @@ zmax = int(-0.5*100)
 #    (xmin, xmax, ymin, ymax, zmin, zmax, dia, parts) = args
 centerDist = float(dmin)+0.02*float(dmax)
 # centerDist = float(14)+0.02*float(14)
-  
+
+# particles for MT deposition
+# xmin = int(-4.6*100)
+# xmax = int(7.6*100)
+# ymin = int(38.*100)
+# ymax = int(40.*100)
+# zmin = int(-3.0*100)
+# zmax = int(3.*100)
+
+
+# # particles for inhaler
+# xmin = int(4.*100)
+# xmax = int(25.*100)
+# ymin = int(8.5*100)
+# ymax = int(12.*100)
+# zmin = int(-1.0*100)
+# zmax = int(20.*100)
+
+#testing 
+xmin = int(-4.1*100)
+xmax = int(4.*100)
+ymin = int(-3.*100)
+ymax = int(3.*100)
+zmin = int(-7.*100)
+zmax = int(-3.*100)
+
+# capsule model
+# xmin = int(9.7*100)
+# xmax = int(9.8*100)
+# ymin = int(-1.*100)
+# ymax = int(1.*100)
+# zmin = int(-1.*100)
+# zmax = int(1.*100)
+
+# xmin = int(-6.*100)
+# xmax = int(6.*100)
+# ymin = int(-1.5*100)
+# ymax = int(1.5*100)
+# zmin = int(-1.5*100)
+# zmax = int(1.5*100)
+
 
 randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #copyInjection("initial.inj", "combined.inj")
 
 ##### 20 micron model
-#scale = 1.0/7.0
-#convertToMicro("44000.inj", "44000-20.inj", scale)
+#scale = 10.
+#convertToMicro("100-cap.inj", "100-cap2.inj", scale)
 #shift("44000-20.inj", "44000-20-shift.inj")
 #haircut("44000-20-shift.inj","haircut-xmax.inj",(5.0-0.01)*1e-3)
 #haircut("haircut-xmax.inj","haircut-zmin.inj",(-0.5+0.010)*1e-3)
 #haircut("haircut-zmin.inj","haircut-ymax.inj",(0.1-0.010)*1e-3)
 #haircut("haircut-ymax.inj","haircut-final.inj",(-0.1+0.010)*1e-3)
+# filterData("initial.inj","filtered.inj")
 
 ##### 140 micron shift
 # shift("22000.inj", "22000-shift.inj")

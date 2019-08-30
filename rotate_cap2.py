@@ -37,14 +37,14 @@ if len(args) != 3:
    sys.exit(1)
 (infile, angVel, steps) = args
 
-dt = 1.0e-3
+dt = 1.e-4
 
 f = open(infile,"r")
 nF = f.readline()
 interval = 1
 # print(nF)
 nodes = []
-omega = float(angVel)*dt*interval
+omega = -float(angVel)*dt*interval
 for i in range(int(nF)):
     line = f.readline()
     # print(line)
@@ -63,8 +63,8 @@ yShift = 0.003
 zShift = -0.003
 
 #with aerolizer
-yShift = 0.0
-zShift = 0.0
+# yShift = 0.0
+# zShift = 0.0
 for n in range (int(steps)):
     outfile = infile[:-9]+str(n+1)+".dat"
     print(outfile)
@@ -77,15 +77,10 @@ for n in range (int(steps)):
         yy = float(tuple[1]) + yShift
         zz = float(tuple[2]) + zShift
 
-        # with dpi-test   
-        # newX = xx*np.cos(-omega*(n))-zz*np.sin(-omega*(n))
-        # newY = yy 
-        # newZ = xx*np.sin(-omega*(n))+zz*np.cos(-omega*(n)) 
-        
-        # with capsule test    
-        newX = xx*np.cos(omega*(n))-zz*np.sin(omega*(n))
+        # with dpi-test       
+        newX = xx*np.cos(-omega*(n))-zz*np.sin(-omega*(n))
         newY = yy 
-        newZ = zz*np.cos(omega*(n))+xx*np.sin(omega*(n)) 
+        newZ = xx*np.sin(-omega*(n))+zz*np.cos(-omega*(n)) 
 
         # with aerolizer
         # newX = xx*np.cos(omega*(n))-yy*np.sin(omega*(n))
