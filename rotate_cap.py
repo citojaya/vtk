@@ -37,7 +37,7 @@ if len(args) != 3:
    sys.exit(1)
 (infile, angVel, steps) = args
 
-dt = 1.0e-3
+dt = 10.0e-4
 
 f = open(infile,"r")
 nF = f.readline()

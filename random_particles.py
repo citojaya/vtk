@@ -174,14 +174,14 @@ def randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centDist,dmin,dmax):
     # print(particle)
 
 def shift(infile, outfile):
-    zshift = 0.0
+    yshift = 2.0e-3
     # zshift = 0.0 #0.030
     #zshift = 0.004
     #zshift = 0.005
     #zshift = 0.006
   
     #xshift = 4.e-3 + 0.010e-3 - 0.014296
-    xshift = -0.095
+    # xshift = -0.095
     xMax = -1.0
     xMin = 1.0e5
     f1 = open(infile, "r")
@@ -189,16 +189,16 @@ def shift(infile, outfile):
     for line in f1:
         tuple = line.split()
         firststr = tuple[0]
-        xx = float(firststr[2:]) + xshift
+        xx = float(firststr[2:])
         xMax = max(xx,xMax)
         xMin = min(xMin,xx)
-        yy = tuple[1]
+        yy = float(tuple[1])+yshift
         zz = float(tuple[2])
-        zz += zshift
+        # zz += zshift
         zz = str(round(zz,6))
 
         # f2.write(line)
-        f2.write("(("+str(round(xx,6))+" "+yy+" "+zz+" 0.0 0.0 0.0 "+tuple[6]+" 0.0 1.0))\n")
+        f2.write("(("+str(round(xx,6))+" "+str(round(yy,6))+" "+zz+" 0.0 0.0 0.0 "+tuple[6]+" 0.0 1.0))\n")
         #print (xx[2:],yy,str(zz))
 
 
@@ -213,6 +213,7 @@ def haircut(infile, outfile, val):
     f2 = open(outfile, "w")
     minVal = 1.0e3
     maxVal = -1.0e3
+    count = 0
     for line in f1:
         tuple = line.split()
         firststr = tuple[0]
@@ -222,16 +223,18 @@ def haircut(infile, outfile, val):
 #        maxVal = max(maxVal,yy)
 #        minVal = min(minVal,yy)
         #f2.write(line)
-        if(yy > val):
+        if(yy < val):
           maxVal = max(maxVal,yy)
           minVal = min(minVal,yy)
           f2.write("(("+str(round(xx,6))+" "+str(round(yy,6))+" "+str(round(zz,6))+" 0.0 0.0 0.0 "+tuple[6]+" 0.0 1.0))\n")
+          count += 1
         #print (xx[2:],yy,str(zz))
 
     f1.close()
     f2.close()
     print("minVal ",minVal)
     print("maxVal ",maxVal)
+    print("No of particles ",count)
 
 def filterData(infile, outfile):
     f1 = open(infile, "r")
@@ -346,11 +349,19 @@ centerDist = float(dmin)+0.02*float(dmax)
 # zmax = int(20.*100)
 
 #testing 
-xmin = int(-4.1*100)
-xmax = int(4.*100)
-ymin = int(-3.*100)
-ymax = int(3.*100)
-zmin = int(-7.*100)
+# xmin = int(-4.1*100)
+# xmax = int(4.*100)
+# ymin = int(-3.*100)
+# ymax = int(3.*100)
+# zmin = int(-7.*100)
+# zmax = int(-3.*100)
+
+# duct small
+xmin = int(6.0*100)
+xmax = int(8.8*100)
+ymin = int(-0.5*100)
+ymax = int(0.5*100)
+zmin = int(-3.2*100)
 zmax = int(-3.*100)
 
 # capsule model
@@ -361,13 +372,12 @@ zmax = int(-3.*100)
 # zmin = int(-1.*100)
 # zmax = int(1.*100)
 
-# xmin = int(-6.*100)
-# xmax = int(6.*100)
+# xmin = int(-4.8*100)
+# xmax = int(4.8*100)
 # ymin = int(-1.5*100)
-# ymax = int(1.5*100)
-# zmin = int(-1.5*100)
-# zmax = int(1.5*100)
-
+# ymax = int(-1.2*100)
+# zmin = int(-1.0*100)
+# zmax = int(1.0*100)
 
 randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #copyInjection("initial.inj", "combined.inj")
@@ -375,11 +385,8 @@ randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 ##### 20 micron model
 #scale = 10.
 #convertToMicro("100-cap.inj", "100-cap2.inj", scale)
-#shift("44000-20.inj", "44000-20-shift.inj")
-#haircut("44000-20-shift.inj","haircut-xmax.inj",(5.0-0.01)*1e-3)
-#haircut("haircut-xmax.inj","haircut-zmin.inj",(-0.5+0.010)*1e-3)
-#haircut("haircut-zmin.inj","haircut-ymax.inj",(0.1-0.010)*1e-3)
-#haircut("haircut-ymax.inj","haircut-final.inj",(-0.1+0.010)*1e-3)
+# shift("4100-settled.inj", "8200-shift.inj")
+# haircut("random-5.inj","cut-rand-5.inj",(-0.8)*1e-3)
 # filterData("initial.inj","filtered.inj")
 
 ##### 140 micron shift

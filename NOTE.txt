@@ -18,8 +18,9 @@ Convert mesh file to dat file(surface.dat) which will be used later for creating
 salome_to_vtk.py <surface.mesh>
 
 #Build vtu file (surface.vtu) from triangle data (surfaces only)
-and write faces on to a file (*_surfaces.dat) which is used in the simulation to calculate contact force with wall
-vtk_from_triangle.py <surface.dat>
+and write faces on to a file (*-mesh.dat) which is used in the simulation to calculate contact force with wall
+use -m option to write *-mesh.dat (otherwise it will not be writtne)
+vtk_from_triangle.py <surface.dat> <scalefactor>
 
 ################################################################
 # Collision frequency and collision energy probability distribution
