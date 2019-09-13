@@ -37,11 +37,11 @@ if len(args) != 3:
    sys.exit(1)
 (infile, angVel, steps) = args
 
-dt = 10.0e-4
+dt = 1.0e-3
 
 f = open(infile,"r")
 nF = f.readline()
-interval = 1
+interval = 1.
 # print(nF)
 nodes = []
 omega = float(angVel)*dt*interval

@@ -236,6 +236,27 @@ def haircut(infile, outfile, val):
     print("maxVal ",maxVal)
     print("No of particles ",count)
 
+def filterInjData(infile, outfile):
+    f1 = open(infile, "r")
+    f2 = open(outfile, "w")
+    r = 9.6e-3
+    noOfParts = 0
+      
+    for line in f1:
+        tuple = line.split()
+        firststr = tuple[0]
+        xx = float(firststr[2:])
+        # yy = float(tuple[1])
+        # zz = float(tuple[2])
+
+        if(xx < -4.3e-3):
+          f2.write(line)
+    
+    f1.close()
+    f2.close()
+    
+
+
 def filterData(infile, outfile):
     f1 = open(infile, "r")
     f2 = open(outfile, "w")
@@ -361,8 +382,8 @@ xmin = int(6.0*100)
 xmax = int(8.8*100)
 ymin = int(-0.5*100)
 ymax = int(0.5*100)
-zmin = int(-3.2*100)
-zmax = int(-3.*100)
+zmin = int(-3.*100)
+zmax = int(0.*100)
 
 # capsule model
 # xmin = int(9.7*100)
@@ -379,7 +400,7 @@ zmax = int(-3.*100)
 # zmin = int(-1.0*100)
 # zmax = int(1.0*100)
 
-randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
+# randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #copyInjection("initial.inj", "combined.inj")
 
 ##### 20 micron model
@@ -387,7 +408,8 @@ randomList(parts,xmin,xmax,ymin,ymax,zmin,zmax,centerDist,dmin,dmax)
 #convertToMicro("100-cap.inj", "100-cap2.inj", scale)
 # shift("4100-settled.inj", "8200-shift.inj")
 # haircut("random-5.inj","cut-rand-5.inj",(-0.8)*1e-3)
-# filterData("initial.inj","filtered.inj")
+# filterData("100-cap.inj","filtered.inj")
+filterInjData("100-cap.inj","filtered.inj")
 
 ##### 140 micron shift
 # shift("22000.inj", "22000-shift.inj")
