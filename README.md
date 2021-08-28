@@ -1,3 +1,3 @@
 ## VTK
 
-Python scripts used for extracing unstructured data from numerical models 
+Python scripts used for extracting unstructured data from numerical models 
